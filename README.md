@@ -29,6 +29,8 @@ To use the program you need to create an instance of `Huffman` class. Then, use 
 - `pathToRootDir` - path to directory where text files to compress or decompress are stored,
 - `compress` - true for compression, false for decompression.
 
+In my project, there is already a class demonstrating the usage of the algorithm and containing the `main` method, called `LessonExampleGenerator`.
+
 Example:
 ```
 Huffman huffman = new Huffman();
