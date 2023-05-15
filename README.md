@@ -72,4 +72,4 @@ Decompression:
     - saves decompressed text to a text file.
 
 ## Results
-For test purposes, I used a book called "Pan Tadeusz" containing 436 491 characters. The text file weighted 483 KB. With my program, I maneged to reduce it to a combined weight of 282 KB with the compressed text file weighting 278 KB and the Huffman tree file - 4 KB, respectively. The size was cut down by nearly 41,6%.
+For test purposes, I used a book called "Pan Tadeusz" containing 436 491 characters. The text file weighted 483 KB. With my program, I managed to reduce it to a combined weight of 282 KB with the compressed text file weighting 278 KB and the Huffman tree file - 4 KB, respectively. The size was cut down by nearly 41,6%.
