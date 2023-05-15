@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CompressedTextFileReader.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Huffman-coding</a> &gt; <a href="index.source.html" class="el_package">pl.edu.pw.ee.decompression</a> &gt; <span class="el_source">CompressedTextFileReader.java</span></div><h1>CompressedTextFileReader.java</h1><pre class="source lang-java linenums">package pl.edu.pw.ee.decompression;
+
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import pl.edu.pw.ee.files_manipulation.FileValidator;
+
+public class CompressedTextFileReader {
+
+    public static final int N_OF_BITS_IN_BYTE = 8;
+
+    private final File fileToRead;
+<span class="fc" id="L15">    private int nOfActualBits = 0;</span>
+<span class="fc" id="L16">    private int nOfBytes = 0;</span>
+
+<span class="fc" id="L18">    public CompressedTextFileReader(File fileToRead) {</span>
+<span class="fc" id="L19">        new FileValidator(fileToRead).validateFileForReading();</span>
+<span class="fc" id="L20">        this.fileToRead = fileToRead;</span>
+<span class="fc" id="L21">    }</span>
+
+    public byte[] read() throws FileNotFoundException, IOException {
+        byte[] readBytes;
+<span class="fc" id="L25">        try ( DataInputStream inputStream = new DataInputStream(</span>
+                new FileInputStream(fileToRead))) {
+<span class="fc" id="L27">            nOfActualBits = inputStream.readInt();</span>
+<span class="fc" id="L28">            readBytes = inputStream.readAllBytes();</span>
+        }
+<span class="fc" id="L30">        nOfBytes = readBytes.length;</span>
+
+<span class="pc bpc" id="L32" title="1 of 2 branches missed.">        if (nOfBytes * N_OF_BITS_IN_BYTE &lt; nOfActualBits) {</span>
+<span class="nc" id="L33">            throw new IllegalStateException(</span>
+                    &quot;File is corrupted. Some parts are missing.&quot;);
+        }
+
+<span class="fc" id="L37">        return readBytes;</span>
+    }
+
+    public int getNOfActualBits() {
+<span class="fc" id="L41">        return nOfActualBits;</span>
+    }
+
+    public int getNOfBytes() {
+<span class="nc" id="L45">        return nOfBytes;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

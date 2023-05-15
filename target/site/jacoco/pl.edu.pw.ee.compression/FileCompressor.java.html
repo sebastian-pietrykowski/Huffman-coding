@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FileCompressor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Huffman-coding</a> &gt; <a href="index.source.html" class="el_package">pl.edu.pw.ee.compression</a> &gt; <span class="el_source">FileCompressor.java</span></div><h1>FileCompressor.java</h1><pre class="source lang-java linenums">package pl.edu.pw.ee.compression;
+
+import pl.edu.pw.ee.compression.converters.CharsToBinaryTextConverter;
+import pl.edu.pw.ee.compression.converters.BinaryToBytesTextConverter;
+import pl.edu.pw.ee.compression.tree.HuffmanTreeFileWriter;
+import pl.edu.pw.ee.compression.tree.UnitedHuffmanTreeBuilder;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import pl.edu.pw.ee.HuffmanTree;
+import pl.edu.pw.ee.files_manipulation.FileValidator;
+import pl.edu.pw.ee.files_manipulation.FilesToWorkFinder;
+import pl.edu.pw.ee.files_manipulation.ResultFileCreator;
+
+<span class="fc" id="L16">public class FileCompressor {</span>
+
+<span class="fc" id="L18">    private int sumOfBitsAfterCompression = 0;</span>
+
+    public void compress(String pathToRootDir) throws IOException {
+<span class="fc" id="L21">        validatePathToRootDir(pathToRootDir);</span>
+<span class="fc" id="L22">        File fileFromPath = new File(pathToRootDir);</span>
+
+<span class="fc" id="L24">        FileValidator fileValidator = new FileValidator(fileFromPath);</span>
+<span class="fc" id="L25">        fileValidator.validateIfFileIsNotNull();</span>
+<span class="fc" id="L26">        fileValidator.validateIfFileExists();</span>
+<span class="fc" id="L27">        fileValidator.validateIfFileIsDirectory();</span>
+
+<span class="fc" id="L29">        FilesToWorkFinder filesToWorkFinder = new FilesToWorkFinder();</span>
+<span class="fc" id="L30">        List&lt;File&gt; filesToCompress</span>
+<span class="fc" id="L31">                = filesToWorkFinder.findFilesToCompress(pathToRootDir);</span>
+<span class="fc bfc" id="L32" title="All 2 branches covered.">        for (File file : filesToCompress) {</span>
+<span class="fc" id="L33">            compressFile(file);</span>
+<span class="fc" id="L34">        }</span>
+<span class="fc" id="L35">    }</span>
+
+    public int getSumOfBitsAfterCompression() {
+<span class="fc" id="L38">        return sumOfBitsAfterCompression;</span>
+    }
+
+    private void compressFile(File fileToCompress) throws IOException {
+<span class="fc" id="L42">        UnitedHuffmanTreeBuilder unitedTreeBuilder</span>
+                = new UnitedHuffmanTreeBuilder(fileToCompress);
+<span class="fc" id="L44">        HuffmanTree unitedTree = unitedTreeBuilder.build();</span>
+<span class="fc bfc" id="L45" title="All 2 branches covered.">        if (unitedTree == null) {</span>
+<span class="fc" id="L46">            return;</span>
+        }
+
+<span class="fc" id="L49">        CodesBuilder codesBuilder = new CodesBuilder(unitedTree);</span>
+<span class="fc" id="L50">        Map&lt;Character, String&gt; codes = codesBuilder.buildCodesForCompressing();</span>
+
+<span class="fc" id="L52">        ResultFileCreator resultFileCreator</span>
+                = new ResultFileCreator(fileToCompress);
+<span class="fc" id="L54">        writeTreeToFile(unitedTree, resultFileCreator);</span>
+
+<span class="fc" id="L56">        char[] charsText = new FileReaderToChars(fileToCompress).readChars();</span>
+<span class="fc" id="L57">        CharsToBinaryTextConverter charsToBinaryTextConverter</span>
+                = new CharsToBinaryTextConverter(codes, charsText);
+<span class="fc" id="L59">        String binaryCompressedText = charsToBinaryTextConverter.convert();</span>
+<span class="fc" id="L60">        int nOfActualBits = charsToBinaryTextConverter.getNOfActualBits();</span>
+
+<span class="fc" id="L62">        BinaryToBytesTextConverter binaryToBytesTextConverter</span>
+                = new BinaryToBytesTextConverter(binaryCompressedText);
+<span class="fc" id="L64">        byte[] bytesCompressedText = binaryToBytesTextConverter.convert();</span>
+<span class="fc" id="L65">        int nOfBitsInCompressedFile</span>
+<span class="fc" id="L66">                = binaryToBytesTextConverter.getNOfBitsInCompressedFile();</span>
+
+<span class="fc" id="L68">        writeCompressedTextToFile(bytesCompressedText, nOfActualBits,</span>
+                resultFileCreator);
+
+<span class="fc" id="L71">        sumOfBitsAfterCompression += nOfBitsInCompressedFile;</span>
+<span class="fc" id="L72">    }</span>
+
+    private void writeTreeToFile(HuffmanTree unitedTree,
+            ResultFileCreator resultFileCreator) throws IOException {
+
+<span class="fc" id="L77">        HuffmanTreeFileWriter treeFileWriter</span>
+                = new HuffmanTreeFileWriter(unitedTree);
+<span class="fc" id="L79">        File fileToWriteTree = resultFileCreator.createFileForTree();</span>
+<span class="fc" id="L80">        treeFileWriter.write(fileToWriteTree);</span>
+<span class="fc" id="L81">    }</span>
+
+    private void writeCompressedTextToFile(byte[] bytesCompressedText,
+            int nOfActualBits, ResultFileCreator resultFileCreator)
+            throws IOException {
+
+<span class="fc" id="L87">        CompressedTextFileWriter codesFileWriter = new CompressedTextFileWriter(</span>
+                bytesCompressedText, nOfActualBits);
+<span class="fc" id="L89">        File fileToWriteCompressedText = resultFileCreator</span>
+<span class="fc" id="L90">                .createFileForCompressedText();</span>
+<span class="fc" id="L91">        codesFileWriter.write(fileToWriteCompressedText);</span>
+<span class="fc" id="L92">    }</span>
+
+    private void validatePathToRootDir(String pathToRootDir) {
+<span class="fc bfc" id="L95" title="All 2 branches covered.">        if (pathToRootDir == null) {</span>
+<span class="fc" id="L96">            throw new IllegalArgumentException(&quot;Argument pathToRootDir is null.&quot;);</span>
+        }
+<span class="fc" id="L98">        FileValidator validator = new FileValidator(new File(pathToRootDir));</span>
+<span class="fc" id="L99">        validator.validateIfFileIsNotNull();</span>
+<span class="fc" id="L100">        validator.validateIfFileExists();</span>
+<span class="fc" id="L101">        validator.validateIfFileIsDirectory();</span>
+<span class="fc" id="L102">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

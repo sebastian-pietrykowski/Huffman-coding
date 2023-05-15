@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CodesBuilder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Huffman-coding</a> &gt; <a href="index.source.html" class="el_package">pl.edu.pw.ee.compression</a> &gt; <span class="el_source">CodesBuilder.java</span></div><h1>CodesBuilder.java</h1><pre class="source lang-java linenums">package pl.edu.pw.ee.compression;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import pl.edu.pw.ee.HuffmanTree;
+
+public class CodesBuilder {
+
+    private final HuffmanTree huffmanTree;
+    private Map&lt;Character, String&gt; codes;
+
+<span class="fc" id="L14">    public CodesBuilder(HuffmanTree huffmanTree) {</span>
+<span class="fc" id="L15">        validateHuffmanTree(huffmanTree);</span>
+<span class="fc" id="L16">        this.huffmanTree = huffmanTree;</span>
+<span class="fc" id="L17">    }</span>
+
+    public Map&lt;Character, String&gt; buildCodesForCompressing() {
+<span class="fc" id="L20">        codes = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L21">        List&lt;Character&gt; currentCode = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L22">        buildCodes(huffmanTree, currentCode);</span>
+
+<span class="fc" id="L24">        return codes;</span>
+    }
+
+    private void buildCodes(HuffmanTree tree, List&lt;Character&gt; currentCode) {
+<span class="fc bfc" id="L28" title="All 2 branches covered.">        if (tree == null) {</span>
+<span class="fc" id="L29">            return;</span>
+        }
+<span class="fc bfc" id="L31" title="All 2 branches covered.">        if (tree.isLeaf()) {</span>
+<span class="fc" id="L32">            StringBuilder sb = new StringBuilder();</span>
+<span class="fc bfc" id="L33" title="All 2 branches covered.">            for (Character sign : currentCode) {</span>
+<span class="fc" id="L34">                sb.append(sign);</span>
+<span class="fc" id="L35">            }</span>
+<span class="fc" id="L36">            String currentCodeString = sb.toString();</span>
+<span class="fc" id="L37">            codes.put(tree.getCharacter(), currentCodeString);</span>
+<span class="fc" id="L38">            return;</span>
+        }
+
+<span class="fc" id="L41">        currentCode.add('0');</span>
+<span class="fc" id="L42">        buildCodes(tree.getLeftChild(), currentCode);</span>
+
+<span class="fc" id="L44">        currentCode.set(currentCode.size() - 1, '1');</span>
+<span class="fc" id="L45">        buildCodes(tree.getRightChild(), currentCode);</span>
+
+<span class="fc" id="L47">        currentCode.remove(currentCode.size() - 1);</span>
+<span class="fc" id="L48">    }</span>
+
+    private void validateHuffmanTree(HuffmanTree huffmanTree) {
+<span class="fc bfc" id="L51" title="All 2 branches covered.">        if (huffmanTree == null) {</span>
+<span class="fc" id="L52">            throw new IllegalArgumentException(&quot;Huffman tree cannot be null.&quot;);</span>
+        }
+<span class="fc" id="L54">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

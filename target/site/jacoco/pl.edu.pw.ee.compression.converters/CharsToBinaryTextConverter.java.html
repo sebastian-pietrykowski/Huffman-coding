@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CharsToBinaryTextConverter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Huffman-coding</a> &gt; <a href="index.source.html" class="el_package">pl.edu.pw.ee.compression.converters</a> &gt; <span class="el_source">CharsToBinaryTextConverter.java</span></div><h1>CharsToBinaryTextConverter.java</h1><pre class="source lang-java linenums">package pl.edu.pw.ee.compression.converters;
+
+import java.util.Map;
+
+public class CharsToBinaryTextConverter {
+
+    private final Map&lt;Character, String&gt; encoding;
+    private final char[] text;
+<span class="fc" id="L9">    private int nOfActualBits = 0;</span>
+
+    public CharsToBinaryTextConverter(Map&lt;Character, String&gt; encoding,
+<span class="fc" id="L12">            char[] text) {</span>
+
+<span class="fc" id="L14">        validateEncoding(encoding);</span>
+<span class="fc" id="L15">        validateCharsArray(text);</span>
+<span class="fc" id="L16">        this.encoding = encoding;</span>
+<span class="fc" id="L17">        this.text = text;</span>
+<span class="fc" id="L18">    }</span>
+
+    public String convert() {
+<span class="fc" id="L21">        StringBuilder sb = new StringBuilder();</span>
+
+<span class="fc bfc" id="L23" title="All 2 branches covered.">        for (char character : text) {</span>
+<span class="fc bfc" id="L24" title="All 2 branches covered.">            if (!encoding.containsKey(character)) {</span>
+<span class="fc" id="L25">                throw new IllegalStateException(</span>
+                        &quot;Read character doesn't have its own code.&quot;);
+            }
+<span class="fc" id="L28">            sb.append(encoding.get(character));</span>
+        }
+
+<span class="fc" id="L31">        nOfActualBits = sb.length();</span>
+
+<span class="fc" id="L33">        return sb.toString();</span>
+    }
+
+    public int getNOfActualBits() {
+<span class="fc" id="L37">        return nOfActualBits;</span>
+    }
+
+    private void validateEncoding(Map&lt;Character, String&gt; encoding) {
+<span class="fc bfc" id="L41" title="All 2 branches covered.">        if (encoding == null) {</span>
+<span class="fc" id="L42">            throw new IllegalArgumentException(&quot;Encoding is null.&quot;);</span>
+        }
+<span class="pc bpc" id="L44" title="1 of 2 branches missed.">        if (encoding.isEmpty()) {</span>
+<span class="nc" id="L45">            throw new IllegalArgumentException(&quot;Encoding is empty.&quot;);</span>
+        }
+<span class="fc" id="L47">    }</span>
+
+    private void validateCharsArray(char[] array) {
+<span class="fc bfc" id="L50" title="All 2 branches covered.">        if (array == null) {</span>
+<span class="fc" id="L51">            throw new IllegalArgumentException(&quot;Array is null.&quot;);</span>
+        }
+<span class="pc bpc" id="L53" title="1 of 2 branches missed.">        if (array.length == 0) {</span>
+<span class="nc" id="L54">            throw new IllegalArgumentException(&quot;Array is of size 0.&quot;);</span>
+        }
+<span class="fc" id="L56">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HuffmanTreeFileWriter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Huffman-coding</a> &gt; <a href="index.source.html" class="el_package">pl.edu.pw.ee.compression.tree</a> &gt; <span class="el_source">HuffmanTreeFileWriter.java</span></div><h1>HuffmanTreeFileWriter.java</h1><pre class="source lang-java linenums">package pl.edu.pw.ee.compression.tree;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import pl.edu.pw.ee.HuffmanTree;
+
+public class HuffmanTreeFileWriter {
+
+    private final HuffmanTree tree;
+
+<span class="fc" id="L14">    public HuffmanTreeFileWriter(HuffmanTree tree) {</span>
+<span class="fc" id="L15">        validateTree(tree);</span>
+<span class="fc" id="L16">        this.tree = tree;</span>
+<span class="fc" id="L17">    }</span>
+
+    public void write(File fileToWrite) throws FileNotFoundException,
+            IOException {
+
+<span class="fc" id="L22">        try ( ObjectOutputStream outputStream = new ObjectOutputStream(</span>
+                new FileOutputStream(fileToWrite))) {
+<span class="fc" id="L24">            outputStream.writeObject(tree);</span>
+        }
+<span class="fc" id="L26">    }</span>
+
+    private void validateTree(HuffmanTree tree) {
+<span class="fc bfc" id="L29" title="All 2 branches covered.">        if (tree == null) {</span>
+<span class="fc" id="L30">            throw new IllegalArgumentException(&quot;Tree is null.&quot;);</span>
+        }
+<span class="fc" id="L32">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

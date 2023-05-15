@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FileValidator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Huffman-coding</a> &gt; <a href="index.source.html" class="el_package">pl.edu.pw.ee.files_manipulation</a> &gt; <span class="el_source">FileValidator.java</span></div><h1>FileValidator.java</h1><pre class="source lang-java linenums">package pl.edu.pw.ee.files_manipulation;
+
+import java.io.File;
+
+public class FileValidator {
+
+    private final File file;
+    private final String fileName;
+
+<span class="fc" id="L10">    public FileValidator(File file) {</span>
+<span class="fc" id="L11">        this.file = file;</span>
+<span class="fc bfc" id="L12" title="All 2 branches covered.">        fileName = file == null ? null : file.getName();</span>
+<span class="fc" id="L13">    }</span>
+
+    public void validateIfFileIsNotNull() {
+<span class="fc bfc" id="L16" title="All 2 branches covered.">        if (file == null) {</span>
+<span class="fc" id="L17">            throw new IllegalArgumentException(</span>
+                    &quot;File cannot be null: &quot; + fileName + &quot;.&quot;);
+        }
+<span class="fc" id="L20">    }</span>
+
+    public void validateFileForWriting() {
+<span class="fc" id="L23">        validateIfFileIsNotNull();</span>
+<span class="fc" id="L24">        validateIfFileExists();</span>
+<span class="pc bpc" id="L25" title="1 of 2 branches missed.">        if (!file.canWrite()) {</span>
+<span class="nc" id="L26">            throw new IllegalArgumentException(</span>
+                    &quot;Cannot write to file: &quot; + fileName + &quot;.&quot;);
+        }
+<span class="fc" id="L29">    }</span>
+
+    public void validateFileForReading() {
+<span class="fc" id="L32">        validateIfFileIsNotNull();</span>
+<span class="fc" id="L33">        validateIfFileExists();</span>
+<span class="pc bpc" id="L34" title="1 of 2 branches missed.">        if (!file.canRead()) {</span>
+<span class="nc" id="L35">            throw new IllegalArgumentException(</span>
+                    &quot;Cannot read from file: &quot; + fileName + &quot;.&quot;);
+        }
+<span class="fc" id="L38">    }</span>
+
+    public void validateIfFileExists() {
+<span class="fc bfc" id="L41" title="All 2 branches covered.">        if (!file.exists()) {</span>
+<span class="fc" id="L42">            throw new IllegalArgumentException(</span>
+                    &quot;File doesn't exist: &quot; + fileName + &quot;.&quot;);
+        }
+<span class="fc" id="L45">    }</span>
+
+    public void validateIfFileIsDirectory() {
+<span class="fc bfc" id="L48" title="All 2 branches covered.">        if (!file.isDirectory()) {</span>
+<span class="fc" id="L49">            throw new IllegalArgumentException(</span>
+                    &quot;File is not directory: &quot; + fileName + &quot;.&quot;);
+        }
+<span class="fc" id="L52">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
